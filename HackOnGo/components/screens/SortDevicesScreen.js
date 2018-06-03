@@ -95,11 +95,11 @@ function mixData(data) {
 }
 
 
-export default class SortDevices extends Component {
+export default class SortDevicesScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>React Native Sortable List</Text>
+                <Text style={styles.title}>Расположите устройства по порядку</Text>
                 <SortableList
                     style={styles.list}
                     contentContainerStyle={styles.contentContainer}
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
 
     title: {
         fontSize: 20,
+        alignItems: 'center',
         paddingVertical: 20,
         color: '#999999',
     },

@@ -1,7 +1,5 @@
 /**
- * Sample React Native App
- * httpss://github.com/facebook/react-native
- * @flow
+ * Entry point of App
  */
 
 import React, { Component } from 'react';
@@ -15,16 +13,33 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-
 import SortableList from 'react-native-sortable-list';
+import SortDevicesScreen from './components/screens/SortDevicesScreen';
+import { createStackNavigator } from 'react-navigation';
 
-import SortDevices from './components/screens/SortDevicesScreen';
+class MenuScreen extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>Menu Screen</Text>
+      </View>
+    );
+  }
+}
 
+const RootStack = createStackNavigator({
+  Menu: MenuScreen,
+  SortDevices: SortDevicesScreen,
+},
+  {
+    initialRouteName: 'SortDevices',
+  }
+);
 
 export default class App extends Component {
   render() {
     return (
-      <SortDevices />
+      <RootStack />
     );
   }
 }
