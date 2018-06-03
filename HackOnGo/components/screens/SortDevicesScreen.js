@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+    Alert,
     Animated,
     Easing,
     StyleSheet,
@@ -17,45 +18,55 @@ const window = Dimensions.get('window');
 
 const sourceData = {
     0: {
+        index: 0,
         image: 'https://placekitten.com/200/240',
         text: 'Chloe',
     },
     1: {
+        index: 1,
         image: 'https://placekitten.com/200/201',
         text: 'Jasper',
     },
     2: {
+        index: 2,
         image: 'https://placekitten.com/200/202',
         text: 'Pepper',
     },
-    3: {
-        image: 'https://placekitten.com/200/203',
-        text: 'Oscar',
-    },
-    4: {
-        image: 'https://placekitten.com/200/204',
-        text: 'Dusty',
-    },
-    5: {
-        image: 'https://placekitten.com/200/205',
-        text: 'Spooky',
-    },
-    6: {
-        image: 'https://placekitten.com/200/210',
-        text: 'Kiki',
-    },
-    7: {
-        image: 'https://placekitten.com/200/215',
-        text: 'Smokey',
-    },
-    8: {
-        image: 'https://placekitten.com/200/220',
-        text: 'Gizmo',
-    },
-    9: {
-        image: 'https://placekitten.com/220/239',
-        text: 'Kitty',
-    },
+    // 3: {
+    //     index: 3,
+    //     image: 'https://placekitten.com/200/203',
+    //     text: 'Oscar',
+    // },
+    // 4: {
+    //     index: 4,
+    //     image: 'https://placekitten.com/200/204',
+    //     text: 'Dusty',
+    // },
+    // 5: {
+    //     index: 5,
+    //     image: 'https://placekitten.com/200/205',
+    //     text: 'Spooky',
+    // },
+    // 6: {
+    //     index: 6,
+    //     image: 'https://placekitten.com/200/210',
+    //     text: 'Kiki',
+    // },
+    // 7: {
+    //     index: 7,
+    //     image: 'https://placekitten.com/200/215',
+    //     text: 'Smokey',
+    // },
+    // 8: {
+    //     index: 8,
+    //     image: 'https://placekitten.com/200/220',
+    //     text: 'Gizmo',
+    // },
+    // 9: {
+    //     index: 9,
+    //     image: 'https://placekitten.com/220/239',
+    //     text: 'Kitty',
+    // },
 };
 
 /**
@@ -95,22 +106,72 @@ function mixData(data) {
 }
 
 
-export default class SortDevices extends Component {
+export default class SortDevicesScreen extends Component {
+    static navigationOptions = {
+        title: 'Выполнение задания'
+    };
+
+    constructor(props) {
+        super(props);
+        
+        var mix = mixData(sourceData);
+
+        //convert objects to array
+        var aData1 = [];
+        for (var i in mix) {
+            i.isOrdered = false;
+            aData1.push(mix[i]);
+        }
+
+        this.state = {
+            sourceCats: mix,
+            aData: aData1,
+        };
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>React Native Sortable List</Text>
+                <Text style={styles.title}>Расположите устройства по порядку</Text>
                 <SortableList
                     style={styles.list}
                     contentContainerStyle={styles.contentContainer}
-                    data={mixData(sourceData)}
-                    renderRow={this._renderRow} />
+                    data={this.state.sourceCats}
+                    renderRow={this._renderRow}
+                />
             </View>
         );
     }
 
-    _renderRow = ({ data, active }) => {
-        return <Row data={data} active={active} />
+    _renderRow = ({ data, active, key, index }) => {
+        //NOTE: refactor this shit
+        var checkEqualIndex = function (data, key, indexOrder, indexItem) {
+            var ordered = indexOrder === indexItem;
+            //console.log(`key = ${key}, iOrder = ${indexOrder}, iItem = ${indexItem}, ${ordered}`);
+            data[key].isOrdered = indexOrder === indexItem;
+
+            var checkOrdered = function (data) {
+                var result = true;
+                for (var i of data) {
+                    if (i.isOrdered === false) {
+                        result = false;
+                        break;
+                    }
+                }
+                return result;
+            };
+            var l = data.length-1;
+            if (key == l) {
+                if (checkOrdered(data)) {
+                    alert('Задание выполнено!');
+                }
+            }
+        };
+        var { aData } = this.state;
+
+        checkEqualIndex(aData, key, data.index, index);
+
+        return <Row data={data} active={active} index={index} />
     }
 }
 
@@ -130,6 +191,7 @@ const styles = StyleSheet.create({
 
     title: {
         fontSize: 20,
+        alignItems: 'center',
         paddingVertical: 20,
         color: '#999999',
     },
@@ -152,10 +214,39 @@ const styles = StyleSheet.create({
         })
     },
 
-    row: {
+    rowOrdered: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: 'green',
+        padding: 16,
+        height: 80,
+        flex: 1,
+        marginTop: 7,
+        marginBottom: 12,
+        borderRadius: 4,
+
+
+        ...Platform.select({
+            ios: {
+                width: window.width - 30 * 2,
+                shadowColor: 'rgba(0,0,0,0.2)',
+                shadowOpacity: 1,
+                shadowOffset: { height: 2, width: 2 },
+                shadowRadius: 2,
+            },
+
+            android: {
+                width: window.width - 30 * 2,
+                elevation: 0,
+                marginHorizontal: 30,
+            },
+        })
+    },
+    //dublicate style for row
+    rowChaos: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'red',
         padding: 16,
         height: 80,
         flex: 1,
@@ -244,13 +335,19 @@ class Row extends Component {
     }
 
     render() {
-        const { data, active } = this.props;
+        const { data, active, index } = this.props;
+
+        var status = function (indexOrder, indexItem, styles) {
+            return (indexOrder === indexItem) ?
+                styles.rowOrdered : styles.rowChaos;
+        };
 
         return (
             <Animated.View style={[
-                styles.row,
+                status(data.index, index, styles),
                 this._style,
             ]}>
+                <Text style={styles.text}>{data.index} </Text>
                 <Image source={{ uri: data.image }} style={styles.image} />
                 <Text style={styles.text}>{data.text}</Text>
             </Animated.View>
