@@ -32,41 +32,41 @@ const sourceData = {
         image: 'https://placekitten.com/200/202',
         text: 'Pepper',
     },
-    3: {
-        index: 3,
-        image: 'https://placekitten.com/200/203',
-        text: 'Oscar',
-    },
-    4: {
-        index: 4,
-        image: 'https://placekitten.com/200/204',
-        text: 'Dusty',
-    },
-    5: {
-        index: 5,
-        image: 'https://placekitten.com/200/205',
-        text: 'Spooky',
-    },
-    6: {
-        index: 6,
-        image: 'https://placekitten.com/200/210',
-        text: 'Kiki',
-    },
-    7: {
-        index: 7,
-        image: 'https://placekitten.com/200/215',
-        text: 'Smokey',
-    },
-    8: {
-        index: 8,
-        image: 'https://placekitten.com/200/220',
-        text: 'Gizmo',
-    },
-    9: {
-        index: 9,
-        image: 'https://placekitten.com/220/239',
-        text: 'Kitty',
-    },
+    // 3: {
+    //     index: 3,
+    //     image: 'https://placekitten.com/200/203',
+    //     text: 'Oscar',
+    // },
+    // 4: {
+    //     index: 4,
+    //     image: 'https://placekitten.com/200/204',
+    //     text: 'Dusty',
+    // },
+    // 5: {
+    //     index: 5,
+    //     image: 'https://placekitten.com/200/205',
+    //     text: 'Spooky',
+    // },
+    // 6: {
+    //     index: 6,
+    //     image: 'https://placekitten.com/200/210',
+    //     text: 'Kiki',
+    // },
+    // 7: {
+    //     index: 7,
+    //     image: 'https://placekitten.com/200/215',
+    //     text: 'Smokey',
+    // },
+    // 8: {
+    //     index: 8,
+    //     image: 'https://placekitten.com/200/220',
+    //     text: 'Gizmo',
+    // },
+    // 9: {
+    //     index: 9,
+    //     image: 'https://placekitten.com/220/239',
+    //     text: 'Kitty',
+    // },
 };
 
 /**
@@ -111,6 +111,24 @@ export default class SortDevicesScreen extends Component {
         title: 'Выполнение задания'
     };
 
+    constructor(props) {
+        super(props);
+        
+        var mix = mixData(sourceData);
+
+        //convert objects to array
+        var aData1 = [];
+        for (var i in mix) {
+            i.isOrdered = false;
+            aData1.push(mix[i]);
+        }
+
+        this.state = {
+            sourceCats: mix,
+            aData: aData1,
+        };
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -118,14 +136,41 @@ export default class SortDevicesScreen extends Component {
                 <SortableList
                     style={styles.list}
                     contentContainerStyle={styles.contentContainer}
-                    data={mixData(sourceData)}
+                    data={this.state.sourceCats}
                     renderRow={this._renderRow}
                 />
             </View>
         );
     }
 
-    _renderRow = ({ data, active, index }) => {
+    _renderRow = ({ data, active, key, index }) => {
+        //NOTE: refactor this shit
+        var checkEqualIndex = function (data, key, indexOrder, indexItem) {
+            var ordered = indexOrder === indexItem;
+            //console.log(`key = ${key}, iOrder = ${indexOrder}, iItem = ${indexItem}, ${ordered}`);
+            data[key].isOrdered = indexOrder === indexItem;
+
+            var checkOrdered = function (data) {
+                var result = true;
+                for (var i of data) {
+                    if (i.isOrdered === false) {
+                        result = false;
+                        break;
+                    }
+                }
+                return result;
+            };
+            var l = data.length-1;
+            if (key == l) {
+                if (checkOrdered(data)) {
+                    alert('Задание выполнено!');
+                }
+            }
+        };
+        var { aData } = this.state;
+
+        checkEqualIndex(aData, key, data.index, index);
+
         return <Row data={data} active={active} index={index} />
     }
 }
@@ -247,7 +292,7 @@ class Row extends Component {
         super(props);
 
         this._active = new Animated.Value(0);
-        
+
         this._style = {
             ...Platform.select({
                 ios: {
@@ -292,8 +337,8 @@ class Row extends Component {
     render() {
         const { data, active, index } = this.props;
 
-        var status = function(indexOrder, indexItem, styles){
-            return (indexOrder === indexItem) ? 
+        var status = function (indexOrder, indexItem, styles) {
+            return (indexOrder === indexItem) ?
                 styles.rowOrdered : styles.rowChaos;
         };
 
