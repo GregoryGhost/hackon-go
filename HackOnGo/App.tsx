@@ -18,23 +18,7 @@ import {
 import SortableList from 'react-native-sortable-list';
 import SortDevicesScreen from './components/screens/SortDevicesScreen';
 import { createStackNavigator } from 'react-navigation';
-
-class MenuScreen extends Component {
-  static navigationOptions = {
-    title: 'Главное меню'
-  };
-
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Button
-          title="Выполнить задание"
-          onPress={() => this.props.navigation.navigate('SortDevices')}
-        />
-      </View>
-    );
-  }
-}
+import MenuScreen from './components/screens/MenuScreen';
 
 const RootStack = createStackNavigator({
   Menu: MenuScreen,
