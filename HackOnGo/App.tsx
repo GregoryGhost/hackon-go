@@ -22,6 +22,7 @@ import MenuScreen from './components/screens/MenuScreen';
 import AuthSocialScreen from './components/screens/AuthSocialScreen';
 import InfoAboutPlayerScreen from './components/screens/InfoAboutPlayerScreen';
 import ShopDevicesScreen from './components/screens/ShopDevicesScreen';
+import MapTaskScreen from './components/screens/MapTasksScreen';
 
 
 const RootStack = createStackNavigator({
@@ -30,6 +31,7 @@ const RootStack = createStackNavigator({
   AuthSocial: AuthSocialScreen,
   InfoAboutPlayer: InfoAboutPlayerScreen,
   ShopDevices: ShopDevicesScreen,
+  MapTask: MapTaskScreen,
 },
   {
     initialRouteName: 'Menu',
