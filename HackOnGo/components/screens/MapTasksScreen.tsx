@@ -4,7 +4,7 @@ import { View, Text} from 'react-native';
 import {NavigationScreenProps} from 'react-navigation';
 
 
-export default class InfoAboutPlayerScreen extends Component<NavigationScreenProps, any> {
+export default class MapTasksScreen extends Component<NavigationScreenProps, any> {
   static navigationOptions = {
     title: 'Карта заданий'
   };
