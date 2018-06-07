@@ -4,15 +4,15 @@ import { View, Text} from 'react-native';
 import {NavigationScreenProps} from 'react-navigation';
 
 
-export default class BackpackScreen extends Component<NavigationScreenProps, any> {
+export default class SearchActiveObjScreen extends Component<NavigationScreenProps, any> {
   static navigationOptions = {
-    title: 'Рюкзак'
+    title: 'Поиск активирующего объекта'
   };
 
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Скрин Рюкзак.</Text>
+        <Text>Скрин Поиск активирующего объекта.</Text>
       </View>
     );
   }

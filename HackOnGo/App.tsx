@@ -24,6 +24,7 @@ import InfoAboutPlayerScreen from './components/screens/InfoAboutPlayerScreen';
 import ShopDevicesScreen from './components/screens/ShopDevicesScreen';
 import MapTaskScreen from './components/screens/MapTasksScreen';
 import BackpackScreen from './components/screens/BackpackScreen';
+import SearchActiveObjScreen from './components/screens/SearchActiveObjScreen';
 
 
 const RootStack = createStackNavigator({
@@ -34,6 +35,7 @@ const RootStack = createStackNavigator({
   ShopDevices: ShopDevicesScreen,
   MapTask: MapTaskScreen,
   Backpack: BackpackScreen,
+  SearchActiveObj: SearchActiveObjScreen,
 },
   {
     initialRouteName: 'Menu',

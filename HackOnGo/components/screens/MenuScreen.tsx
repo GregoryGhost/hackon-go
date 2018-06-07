@@ -14,10 +14,11 @@ export default class MenuScreen extends Component<NavigationScreenProps, any> {
     const screens = [
       { key: "SortDevices" },
       { key: "AuthSocial" },
-      { key: "InfoAboutPlayer"},
-      { key: "ShopDevices"},
-      { key: "MapTask"},
-      { key: "Backpack"},
+      { key: "InfoAboutPlayer" },
+      { key: "ShopDevices" },
+      { key: "MapTask" },
+      { key: "Backpack" },
+      { key: "SearchActiveObj" },
     ];
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
