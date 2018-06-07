@@ -19,14 +19,16 @@ import SortableList from 'react-native-sortable-list';
 import SortDevicesScreen from './components/screens/SortDevicesScreen';
 import { createStackNavigator } from 'react-navigation';
 import MenuScreen from './components/screens/MenuScreen';
+import AuthSocialScreen from './components/screens/AuthSocialScreen';
 
 const RootStack = createStackNavigator({
   Menu: MenuScreen,
   SortDevices: SortDevicesScreen,
+  AuthSocial: AuthSocialScreen,
 },
   {
     initialRouteName: 'Menu',
-  }
+  },
 );
 
 export default class App extends Component {
