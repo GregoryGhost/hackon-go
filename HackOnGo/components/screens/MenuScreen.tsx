@@ -15,6 +15,7 @@ export default class MenuScreen extends Component<NavigationScreenProps, any> {
       { key: "SortDevices" },
       { key: "AuthSocial" },
       { key: "InfoAboutPlayer"},
+      { key: "ShopDevices"},
     ];
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>

@@ -21,6 +21,7 @@ import { createStackNavigator } from 'react-navigation';
 import MenuScreen from './components/screens/MenuScreen';
 import AuthSocialScreen from './components/screens/AuthSocialScreen';
 import InfoAboutPlayerScreen from './components/screens/InfoAboutPlayerScreen';
+import ShopDevicesScreen from './components/screens/ShopDevicesScreen';
 
 
 const RootStack = createStackNavigator({
@@ -28,6 +29,7 @@ const RootStack = createStackNavigator({
   SortDevices: SortDevicesScreen,
   AuthSocial: AuthSocialScreen,
   InfoAboutPlayer: InfoAboutPlayerScreen,
+  ShopDevices: ShopDevicesScreen,
 },
   {
     initialRouteName: 'Menu',
