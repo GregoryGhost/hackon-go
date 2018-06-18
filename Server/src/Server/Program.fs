@@ -8,6 +8,9 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
+open Dapper
+open Npgsql
+open System.Linq
 
 // ---------------------------------
 // Models
@@ -17,6 +20,26 @@ type Message =
     {
         Text : string
     }
+
+[<CLIMutable>]
+type TestUser =
+    {
+        Id : int
+        Name : string
+        Age : int
+    }
+
+let getFirstUser =
+    let firstUser = 
+        lazy (
+            let connection = new NpgsqlConnection("Host=localhost;Username=gregory;Password=root;Database=gregory")
+            connection.Open()
+            let value = connection.Query<TestUser>("SELECT * FROM test;")
+            connection.Close()
+            let user = value.First()
+            sprintf "%d %s %d" user.Id user.Name user.Age
+        )
+    firstUser.Value
 
 // ---------------------------------
 // Views
@@ -55,12 +78,16 @@ let indexHandler (name : string) =
     let view      = Views.index model
     htmlView view
 
+let indexShowFirstUser (name : string) =
+    indexHandler <| name
+
 let webApp =
     choose [
         GET >=>
             choose [
                 route "/" >=> indexHandler "world"
                 routef "/hello/%s" indexHandler
+                route "/show-first-user/" >=> indexShowFirstUser getFirstUser
             ]
         setStatusCode 404 >=> text "Not Found" ]
 
