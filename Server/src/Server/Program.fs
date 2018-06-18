@@ -29,6 +29,31 @@ type TestUser =
         Name : string
         Age : int
     }
+    
+[<CLIMutable>]
+type Tasks =
+    {
+        Name : string
+        Description : string
+        Task_latitude : double
+        Task_longitude : double
+        Payment : double
+    }
+    
+
+let getTasks cityName =
+    let connection = new NpgsqlConnection("Host=localhost;Username=gregory;Password=root;Database=gregory")
+    connection.Open()
+    let query = sprintf "SELECT t.name, t.description, m1.task_latitude, m1.task_longitude, t.payment \
+     FROM tasks t INNER JOIN \
+      (SELECT id_task, task_latitude, task_longitude \
+        FROM mapTasks m INNER JOIN cities c \
+            ON c.name = '%s') as m1 \
+      ON t.id_task = m1.id_task;" cityName
+    let value = connection.Query<Tasks>(query)
+    connection.Close()
+    let tasks = value.ToList()
+    tasks
 
 let getFirstUser =
     let firstUser = 
@@ -53,6 +78,15 @@ let getUsers =
             user
         )
     users.Value
+
+let submitTasks : HttpHandler =
+    fun (next : HttpFunc) (ctx : HttpContext) ->
+        task {
+            let cityName = "Томск"
+            cityName |> getTasks |> ctx.WriteJsonAsync |> ignore
+            
+            return! next ctx
+        }
 
 let submitUsers : HttpHandler =
     fun (next : HttpFunc) (ctx : HttpContext) ->
@@ -111,8 +145,8 @@ let webApp =
                 route "/show-first-user/" >=> indexShowFirstUser getFirstUser
                 route "/show-users1/" >=> negotiate getUsers
 
-                //отправляем клиенту обратно список пользователей в формате JSON
-                route "/show-users2/" >=> submitUsers
+                //отправляем клиенту обратно список заданий в формате JSON
+                route "/tasks/" >=> submitTasks
             ]
         setStatusCode 404 >=> text "Not Found" ]
 
