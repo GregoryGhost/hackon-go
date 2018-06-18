@@ -5,6 +5,7 @@ open System.IO
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
@@ -40,6 +41,26 @@ let getFirstUser =
             sprintf "%d %s %d" user.Id user.Name user.Age
         )
     firstUser.Value
+
+let getUsers =
+    let users =
+        lazy (
+            let connection = new NpgsqlConnection("Host=localhost;Username=gregory;Password=root;Database=gregory")
+            connection.Open()
+            let value = connection.Query<TestUser>("SELECT * FROM test;")
+            connection.Close()
+            let user = value.ToList()
+            user
+        )
+    users.Value
+
+let submitUsers : HttpHandler =
+    fun (next : HttpFunc) (ctx : HttpContext) ->
+        task {
+            ctx.WriteJsonAsync getUsers |> ignore
+            // Sends the object back to the client
+            return! next ctx
+        }
 
 // ---------------------------------
 // Views
@@ -88,6 +109,10 @@ let webApp =
                 route "/" >=> indexHandler "world"
                 routef "/hello/%s" indexHandler
                 route "/show-first-user/" >=> indexShowFirstUser getFirstUser
+                route "/show-users1/" >=> negotiate getUsers
+
+                //отправляем клиенту обратно список пользователей в формате JSON
+                route "/show-users2/" >=> submitUsers
             ]
         setStatusCode 404 >=> text "Not Found" ]
 
